@@ -7,6 +7,12 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
+const axiosInstance = axios.create({
+  baseURL: API_BASE,
+});
+
 const { Text } = Typography;
 
 const Comment = memo(({ id, text, by, kids, time }) => {
@@ -33,7 +39,7 @@ const Comment = memo(({ id, text, by, kids, time }) => {
     setLoading(true);
     try {
       const promises = kids.map((kidId) =>
-        axios.get(`https://hacker-news.firebaseio.com/v0/item/${kidId}.json`),
+        axiosInstance.get(`item/${kidId}.json`),
       );
       const res = await Promise.all(promises);
       setSubComments(res.map((r) => r.data).filter((c) => c && !c.deleted));
